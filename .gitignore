@@ -37,3 +37,12 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Google Cloud Functions
+functions/lib
+functions/node_modules
+
+public
+firebase-debug.log
+.firebase
+.vscode
