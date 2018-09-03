@@ -15,14 +15,10 @@ export class AppComponent {
 
   }
 
-  callCloudFunction() {
-    this.httpClient.get('https://us-central1-rb-benefits.cloudfunctions.net/helloWorld', {responseType: 'text'}).subscribe(msg => {
-      alert(msg);
-    });
-  }
-
-  login() {
-    this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
+  async login() {
+    const credential = await this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
+    const token = await credential.user.getIdToken();
+    console.log(token);
   }
 
   logout() {
