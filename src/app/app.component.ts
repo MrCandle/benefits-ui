@@ -21,8 +21,10 @@ export class AppComponent {
     });
   }
 
-  login() {
-    this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
+  async login() {
+    const credential = await this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
+    const token = await credential.user.getIdToken();
+    console.log(token);
   }
 
   logout() {
