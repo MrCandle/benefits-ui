@@ -92,3 +92,11 @@ app.delete("/benefits/:id", async (req: express.Request, res: express.Response) 
 });
 
 exports.api = functions.https.onRequest(app);
+
+exports.sendNotifications = functions.firestore
+  .document('benefits/{id}')
+  .onCreate((snap, context) => {
+    const newValue = snap.data();
+
+    console.log("created: " + Object.entries(newValue.id));
+  });

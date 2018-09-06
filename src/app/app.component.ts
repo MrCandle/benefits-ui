@@ -1,18 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { auth } from 'firebase';
+
+import { auth, messaging } from 'firebase';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'benefits-ui';
+  messaging;
 
-  constructor(private httpClient: HttpClient, private afAuth: AngularFireAuth) {
+  constructor(private httpClient: HttpClient, public afAuth: AngularFireAuth) {
+    this.messaging = messaging();
+  }
 
+  ngOnInit() {
+    this.messaging.requestPermission();
+    this.messaging.getToken().then((token) => {
+      console.log(token)
+    })
   }
 
   async login() {
