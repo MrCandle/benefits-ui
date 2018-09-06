@@ -1,7 +1,7 @@
 import Benefit from "../model/Benefit";
 import { DocumentData, CollectionReference } from "@google-cloud/firestore";
 
-export default class Benefits {
+export default class BenefitsController {
 
   private collectionRef: CollectionReference;
 

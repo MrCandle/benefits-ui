@@ -3,7 +3,7 @@ import * as admin from "firebase-admin";
 import * as express from "express";
 import * as cookieParser from "cookie-parser";
 import * as cors from "cors";
-import Benefits from "./benefits";
+import { BenefitsController } from "./controllers";
 
 admin.initializeApp(functions.config().firebase);
 const settings = { timestampsInSnapshots: true };
@@ -12,7 +12,7 @@ const db = admin.firestore();
 db.settings(settings);
 
 const app = express();
-const benefits: Benefits = new Benefits(db);
+const benefitsController: BenefitsController = new BenefitsController(db);
 
 // Express middleware that validates Firebase ID Tokens passed in the Authorization HTTP header.
 // The Firebase ID token needs to be passed as a Bearer token in the Authorization HTTP header like this:
@@ -22,11 +22,11 @@ const validateFirebaseIdToken = (req, res, next) => {
   console.log('Check if request is authorized with Firebase ID token');
 
   if ((!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) &&
-      !(req.cookies && req.cookies.__session)) {
+    !(req.cookies && req.cookies.__session)) {
     console.error('No Firebase ID token was passed as a Bearer token in the Authorization header.',
-        'Make sure you authorize your request by providing the following HTTP header:',
-        'Authorization: Bearer <Firebase ID Token>',
-        'or by passing a "__session" cookie.');
+      'Make sure you authorize your request by providing the following HTTP header:',
+      'Authorization: Bearer <Firebase ID Token>',
+      'or by passing a "__session" cookie.');
     res.status(403).send('Unauthorized');
     return;
   }
@@ -36,7 +36,7 @@ const validateFirebaseIdToken = (req, res, next) => {
     console.log('Found "Authorization" header');
     // Read the ID Token from the Authorization header.
     idToken = req.headers.authorization.split('Bearer ')[1];
-  } else if(req.cookies) {
+  } else if (req.cookies) {
     console.log('Found "__session" cookie');
     // Read the ID Token from cookie.
     idToken = req.cookies.__session;
@@ -61,31 +61,31 @@ app.use(cookieParser());
 app.use(validateFirebaseIdToken);
 
 app.get("/benefits", async (req: express.Request, res: express.Response) => {
-  const list = await benefits.getAll().catch((err) => {
+  const list = await benefitsController.getAll().catch((err) => {
     res.status(400).send(err);
   });
   res.status(200).send(list);
 });
 app.post("/benefits", async (req: express.Request, res: express.Response) => {
-  const id = await benefits.create(req.body).catch((err) => {
+  const id = await benefitsController.create(req.body).catch((err) => {
     res.status(400).send(err);
   });
   res.status(200).send(id);
 });
 app.get("/benefits/:id", async (req: express.Request, res: express.Response) => {
-  const benefit = await benefits.getById(req.params.id).catch((err) => {
+  const benefit = await benefitsController.getById(req.params.id).catch((err) => {
     res.status(400).send(err);
   });
   res.status(200).send(benefit);
 });
 app.put("/benefits/:id", async (req: express.Request, res: express.Response) => {
-  const status = await benefits.update(req.body).catch((err) => {
+  const status = await benefitsController.update(req.body).catch((err) => {
     res.status(400).send(err);
   });
   res.status(200).send(status);
 });
 app.delete("/benefits/:id", async (req: express.Request, res: express.Response) => {
-  const status = await benefits.del(req.params.id).catch((err) => {
+  const status = await benefitsController.del(req.params.id).catch((err) => {
     res.status(400).send(err);
   });
   res.status(200).send(status);
