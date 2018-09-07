@@ -72,7 +72,6 @@ export default class BenefitsController {
     console.log(`Benefits.create: ${Object.entries(benefit)}`);
     return new Promise<String>(async (resolve, reject) => {
       const doc = await this.collectionRef.add(benefit);
-      console.log(``)
       resolve(doc.id);
     });
   }
