@@ -25,7 +25,7 @@ export default class UsersController {
                 devices.push(...data.devices);
             });
 
-            console.log(`devices found: ${devices.length}` )
+            console.log(`devices found: ${devices.length}`)
             resolve(devices);
         });
     }
@@ -37,10 +37,12 @@ export default class UsersController {
 
             let devices: Array<string> = [];
             if (userDoc.exists) {
-                devices = !(userDoc.data().devices) ? userDoc.data().devices : [];
+                devices = (userDoc.data().devices) ? userDoc.data().devices : [];
             }
 
-            devices.push(deviceToken);
+            if (!(devices.includes(deviceToken))){
+                devices.push(deviceToken);
+            }
 
             const result = await this.collectionRef.doc(userId).set({ devices: devices });
             if (!result) {

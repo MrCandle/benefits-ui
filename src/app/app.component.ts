@@ -26,13 +26,16 @@ export class AppComponent implements OnInit {
     const token = await credential.user.getIdToken();
     console.log(token)
 
-    this.messaging.requestPermission();
-    const deviceToken = await this.messaging.getToken()
+    const request = await this.messaging.requestPermission();
+    const deviceToken = await this.messaging.getToken();
 
-    this.httpClient.put(`https://us-central1-rb-benefits.cloudfunctions.net/api/users/${credential.user.uid}`, {
+    console.log('FCM: ' + deviceToken);
+    this.httpClient.put(`https://us-central1-rb-benefits.cloudfunctions.net/api/users/${credential.user.email}`, {
       deviceToken: deviceToken
     }, {
         headers: new HttpHeaders().append('Authorization', `Bearer ${token}`)
+      }).toPromise().then((res) => {
+        console.log(res);
       });
   }
 

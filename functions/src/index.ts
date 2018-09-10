@@ -114,7 +114,6 @@ exports.sendNotifications = functions.firestore
   .onCreate(async (snap, context) => {
     // const newValue = snap.data();
 
-    // 'ev7rG8kkWiY:APA91bE1NSDD7JfPP4q4gx_LxXIQRDpgdtOpW9xDH6xy1_giLNp8TiVJVqZ9gkqswTCaXswR5Zyj48NfwcfJ4CJSg8SPupzr0BpvAXHkVMcO5mb30anRzvCguaPG96tMjgoB8K_UjDTq'
     const tokens: Array<string> = await usersController.getAllDevices();
 
     console.log(`sending to ${tokens.length} devices`)
@@ -127,7 +126,5 @@ exports.sendNotifications = functions.firestore
         }
       });
 
-      //TODO ESTO FALLA LPM, DEBUGGEAR ERROR
-    console.log(response);
     console.log("created: " + response.successCount);
   });
